@@ -1,0 +1,22 @@
+{
+  "name": "torrust-scraper",
+  "version": "1.0.0",
+  "description": "Scrape torrents from the rpdl website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "rakema01",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rakema01/torrust-scraper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rakema01/torrust-scraper/issues"
+  },
+  "homepage": "https://github.com/rakema01/torrust-scraper",
+  "dependencies": {
+    "torrust-js": "github:rakema01/torrust-js"
+  }
+}

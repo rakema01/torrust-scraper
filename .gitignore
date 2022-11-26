@@ -2,6 +2,7 @@
 config.json
 downloaded.json
 torrents/
+package-lock.json
 
 # Logs
 logs

@@ -38,14 +38,13 @@ if(!fs.existsSync(configFile)){
 }
 
 const torrust = new Torrust(config.username, config.password, config.hostname, config.port);
-let busy = false;
 
 torrust.login()
     .then(async () => {
         const torrents = await torrust.getTorrents(config.pageSize);
         let results = torrents.results;
+        let total = 0;
         const downloading = [];
-        busy = true;
         // Needs a better way to queue up downloads
         while(results.length > 0){
             if(downloading.length < config.concurrentDownloads){
@@ -65,8 +64,13 @@ torrust.login()
                     .then(() => {
                         downloading.splice(downloading.findIndex(v => v === torrent_id));
                         exists.push(torrent_id);
-                        if(downloading.length === 0){
-                            fs.writeFileSync(downloadTracker, JSON.stringify(exists));
+                        total++;
+                        if(downloading.length === 0 && results.length  === 0){
+                            fs.writeFile(downloadTracker, JSON.stringify(exists), (err) => {
+                                if(err) throw new Error(err);
+                                console.log(`[INFO] Scrape finished. Downloaded a total of ${total} torrents`);
+                                process.exit();
+                            })
                         }
                     }, err => {
                         console.log(`[ERROR] ${torrent.torrent_id} failed to download due to: ${err}`);
@@ -77,7 +81,6 @@ torrust.login()
                 await new Promise(resolve => {setTimeout(resolve, 100)})
             }
         }
-        busy = false;
     }, err => {
         console.log(`[ERROR] Failed to login due to: ${err}`)
     })

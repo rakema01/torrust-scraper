@@ -59,13 +59,14 @@ torrust.login()
                     console.log("[INFO] Files are too large! Skipping...");
                     continue;
                 }
+                downloading.push(torrent.torrent_id);
 
                 torrust.downloadTorrentFile(torrent_id, `./torrents`)
                     .then(() => {
                         downloading.splice(downloading.findIndex(v => v === torrent_id));
                         exists.push(torrent_id);
                         total++;
-                        if(downloading.length === 0 && results.length  === 0){
+                        if(downloading.length === 0 && results.length === 0){
                             fs.writeFile(downloadTracker, JSON.stringify(exists), (err) => {
                                 if(err) throw new Error(err);
                                 console.log(`[INFO] Scrape finished. Downloaded a total of ${total} torrents`);
@@ -76,7 +77,6 @@ torrust.login()
                         console.log(`[ERROR] ${torrent.torrent_id} failed to download due to: ${err}`);
                         downloading.splice(downloading.findIndex(v => v === torrent.torrent_id));
                     });
-                downloading.push(torrent.torrent_id);
             }else{
                 await new Promise(resolve => {setTimeout(resolve, 100)})
             }
